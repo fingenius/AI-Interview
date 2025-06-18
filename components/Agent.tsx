@@ -115,15 +115,19 @@ const Agent = ({
   }, [messages, callStatus, feedbackId, interviewId, router, type, userId]);
 
   const handleCall = async () => {
+    console.log("vapi:", vapi);
+    console.log("vapi.start exists?", typeof vapi.start);
     setCallStatus(CallStatus.CONNECTING);
 
     if (type === "generate") {
-      await vapi.start(process.env.NEXT_PUBLIC_VAPI_WORKFLOW_ID!, {
-        variableValues: {
-          username: userName,
-          userid: userId,
-        },
-      });
+      try {
+        await vapi.start(process.env.NEXT_PUBLIC_VAPI_WORKFLOW_ID!, {
+          variableValues: { username: userName, userid: userId },
+        });
+      } catch (err) {
+        console.error("VAPI start failed:", err);
+        setCallStatus(CallStatus.INACTIVE);
+      }
     } else {
       let formattedQuestions = "";
       if (questions) {
