@@ -120,10 +120,13 @@ export async function getLatestInterviews(
     .limit(limit)
     .toArray();
 
-  return interviews.map((doc) => ({
-    id: doc._id.toHexString(),
-    ...doc.data,
-  })) as Interview[];
+  return interviews.map(doc => {
+  const { _id, ...rest } = doc;
+  return {
+    id: _id.toHexString(),
+    ...rest
+  } as Interview;
+}) as Interview[];
 }
 
 export async function getInterviewsByUserId(
