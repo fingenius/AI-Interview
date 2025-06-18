@@ -117,6 +117,8 @@ const Agent = ({
   const handleCall = async () => {
     console.log("vapi:", vapi);
     console.log("vapi.start exists?", typeof vapi.start);
+    console.log("WORKFLOW_ID:", process.env.NEXT_PUBLIC_VAPI_WORKFLOW_ID);
+
     setCallStatus(CallStatus.CONNECTING);
 
     if (type === "generate") {
@@ -124,8 +126,13 @@ const Agent = ({
         await vapi.start(process.env.NEXT_PUBLIC_VAPI_WORKFLOW_ID!, {
           variableValues: { username: userName, userid: userId },
         });
-      } catch (err) {
-        console.error("VAPI start failed:", err);
+      } catch (err: any) {
+        console.error(
+          "VAPI start failed – code:",
+          err.error?.code,
+          "message:",
+          err.error?.message
+        );
         setCallStatus(CallStatus.INACTIVE);
       }
     } else {
