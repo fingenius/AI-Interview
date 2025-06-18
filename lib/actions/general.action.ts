@@ -122,7 +122,7 @@ export async function getLatestInterviews(
 
   return interviews.map((doc) => ({
     id: doc._id.toHexString(),
-    ...doc.data(),
+    ...doc.data,
   })) as Interview[];
 }
 
