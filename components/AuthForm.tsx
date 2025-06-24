@@ -8,15 +8,11 @@ import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-
-
 import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 
 import { signIn, signUp } from "@/lib/actions/auth.action";
 import FormField from "./FormField";
-
-
 
 const authFormSchema = (type: FormType) => {
   return z.object({
@@ -57,8 +53,12 @@ const AuthForm = ({ type }: { type: FormType }) => {
         const { email, password } = data;
 
         const result = await signIn({ email, password });
+        if (!result.success) {
+          toast.error(result.message);
+          return;
+        }
 
-        toast.success("Signed in successfully.");
+        toast.success("Signed in Successfully.");
         router.push("/");
       }
     } catch (error) {
